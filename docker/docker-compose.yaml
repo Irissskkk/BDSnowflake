@@ -1,0 +1,25 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: petstore_dw
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: secure_pass_123
+      POSTGRES_DB: petstore_db
+    ports:
+      - "5432:5432"
+    volumes:
+      # SQL-скрипты инициализации (выполняются по алфавиту!)
+      - ../sql:/docker-entrypoint-initdb.d:ro
+      # Исходные CSV-файлы
+      - ../data:/data_source:ro
+      # Персистентность данных
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d petstore_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  pgdata:
