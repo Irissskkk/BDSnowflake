@@ -1,7 +1,7 @@
 -- 01_create_staging.sql
 -- Создание staging-таблицы + импорт всех 10 CSV-файлов БЕЗ объединения
 
-\echo '🚀 Этап 1: Создание staging_raw и импорт данных...'
+\echo 'Этап 1: Создание staging_raw и импорт данных...'
 
 -- Удаляем таблицу если существует (для идемпотентности)
 DROP TABLE IF EXISTS staging_raw CASCADE;
@@ -68,15 +68,15 @@ CREATE INDEX idx_staging_sale_product_id ON staging_raw(sale_product_id);
 CREATE INDEX idx_staging_store_name ON staging_raw(store_name);
 CREATE INDEX idx_staging_supplier_name ON staging_raw(supplier_name);
 
-\echo '✅ Таблица staging_raw создана'
+\echo 'Таблица staging_raw создана'
 
 -- =====================================================
--- 📥 ИМПОРТ ВСЕХ 10 CSV-ФАЙЛОВ (без объединения!)
+-- ИМПОРТ ВСЕХ 10 CSV-ФАЙЛОВ (без объединения!)
 -- =====================================================
 -- Пути указаны для docker-тома: /data_source/...
 -- Файлы смонтированы через volumes в docker-compose.yml
 
-\echo '📥 Начинаю импорт CSV-файлов...'
+\echo ' Начинаю импорт CSV-файлов...'
 
 -- Файл 0: MOCK_DATA.csv
 \echo '   → MOCK_DATA.csv'
@@ -228,31 +228,31 @@ WITH (
     )
 );
 
-\echo '✅ Все 10 файлов импортированы'
+\echo ' Все 10 файлов импортированы'
 -- =====================================================
--- 📊 ПРОВЕРКА ИМПОРТА (ИСПРАВЛЕНО)
+--  ПРОВЕРКА ИМПОРТА (ИСПРАВЛЕНО)
 -- =====================================================
 \echo ''
-\echo '📈 Статистика после импорта:'
+\echo ' Статистика после импорта:'
 
 -- Общее количество строк
-SELECT '📦 Всего строк в staging_raw' AS metric, COUNT(*)::TEXT AS value FROM staging_raw
+SELECT ' Всего строк в staging_raw' AS metric, COUNT(*)::TEXT AS value FROM staging_raw
 UNION ALL
 -- Уникальные покупатели
-SELECT '👥 Уникальные покупатели', COUNT(DISTINCT sale_customer_id)::TEXT FROM staging_raw
+SELECT ' Уникальные покупатели', COUNT(DISTINCT sale_customer_id)::TEXT FROM staging_raw
 UNION ALL
 -- Уникальные товары
-SELECT '🛍️ Уникальные товары', COUNT(DISTINCT sale_product_id)::TEXT FROM staging_raw
+SELECT ' Уникальные товары', COUNT(DISTINCT sale_product_id)::TEXT FROM staging_raw
 UNION ALL
 -- Уникальные магазины
-SELECT '🏪 Уникальные магазины', COUNT(DISTINCT store_name)::TEXT FROM staging_raw
+SELECT ' Уникальные магазины', COUNT(DISTINCT store_name)::TEXT FROM staging_raw
 UNION ALL
 -- Диапазон дат
-SELECT '📅 Диапазон дат', MIN(sale_date)::TEXT || ' — ' || MAX(sale_date)::TEXT FROM staging_raw;
+SELECT ' Диапазон дат', MIN(sale_date)::TEXT || ' — ' || MAX(sale_date)::TEXT FROM staging_raw;
 
 -- Проверка на дубликаты по первичному ключу id
 \echo ''
-\echo '🔍 Проверка на дубликаты по id:'
+\echo ' Проверка на дубликаты по id:'
 SELECT 
     COUNT(*) AS total_rows,
     COUNT(DISTINCT id) AS unique_ids,
@@ -261,7 +261,7 @@ FROM staging_raw;
 
 -- Проверка NULL в критичных полях
 \echo ''
-\echo '⚠️  NULL в критичных полях:'
+\echo '  NULL в критичных полях:'
 SELECT 
     COUNT(*) FILTER (WHERE sale_date IS NULL) AS null_dates,
     COUNT(*) FILTER (WHERE sale_total_price IS NULL) AS null_prices,
@@ -270,4 +270,4 @@ SELECT
 FROM staging_raw;
 
 \echo ''
-\echo '✅ Этап 1 завершён. Переходите к 02_ddl_shared_dims.sql'
+\echo ' Этап 1 завершён. Переходите к 02_ddl_shared_dims.sql'
