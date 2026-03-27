@@ -1,7 +1,7 @@
 -- 04_ddl_fact.sql
 -- Таблица фактов продаж
 
-\echo '🚀 Этап 4: Создание таблицы фактов...'
+\echo 'Этап 4: Создание таблицы фактов...'
 
 DROP TABLE IF EXISTS fact_sales CASCADE;
 
@@ -29,4 +29,4 @@ CREATE INDEX idx_fact_sales_store ON fact_sales(store_id);
 CREATE INDEX idx_fact_sales_supplier ON fact_sales(supplier_id);
 CREATE INDEX idx_fact_sales_date_product ON fact_sales(sale_date, product_id);
 
-\echo '✅ Таблица фактов fact_sales создана'
+\echo 'Таблица фактов fact_sales создана'

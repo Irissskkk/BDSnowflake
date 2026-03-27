@@ -1,7 +1,7 @@
 -- 06_dml_load_main_dims.sql
 -- Загрузка основных измерений
 
-\echo '🚀 Этап 6: Загрузка основных измерений...'
+\echo 'Этап 6: Загрузка основных измерений...'
 
 -- ========== ПОКУПАТЕЛИ ==========
 INSERT INTO dim_customer (source_id, first_name, last_name, age, email, postal_code, country_id)
@@ -121,10 +121,10 @@ WHERE sr.supplier_name IS NOT NULL AND TRIM(sr.supplier_name) != ''
 ON CONFLICT (source_name) DO NOTHING;
 
 -- Статистика
-\echo '📊 Покупателей: ' || (SELECT COUNT(*) FROM dim_customer);
-\echo '📊 Продавцов: ' || (SELECT COUNT(*) FROM dim_seller);
-\echo '📊 Товаров: ' || (SELECT COUNT(*) FROM dim_product);
-\echo '📊 Магазинов: ' || (SELECT COUNT(*) FROM dim_store);
-\echo '📊 Поставщиков: ' || (SELECT COUNT(*) FROM dim_supplier);
-\echo '📊 Питомцев: ' || (SELECT COUNT(*) FROM dim_pet);
-\echo '✅ Основные измерения загружены'
+\echo 'Покупателей: ' || (SELECT COUNT(*) FROM dim_customer);
+\echo 'Продавцов: ' || (SELECT COUNT(*) FROM dim_seller);
+\echo 'Товаров: ' || (SELECT COUNT(*) FROM dim_product);
+\echo 'Магазинов: ' || (SELECT COUNT(*) FROM dim_store);
+\echo 'Поставщиков: ' || (SELECT COUNT(*) FROM dim_supplier);
+\echo 'Питомцев: ' || (SELECT COUNT(*) FROM dim_pet);
+\echo 'Основные измерения загружены'

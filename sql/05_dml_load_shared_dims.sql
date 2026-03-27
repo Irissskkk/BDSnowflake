@@ -1,7 +1,7 @@
 -- 05_dml_load_shared_dims.sql
 -- Загрузка общих нормализованных справочников
 
-\echo '🚀 Этап 5: Загрузка общих измерений...'
+\echo 'Этап 5: Загрузка общих измерений...'
 
 -- Страны: собираем из всех сущностей
 INSERT INTO dim_country (country_name)
@@ -47,8 +47,8 @@ FROM (
 ON CONFLICT (category_name) DO NOTHING;
 
 -- Статистика
-\echo '📊 Загружено стран: ' || (SELECT COUNT(*) FROM dim_country);
-\echo '📊 Загружено городов: ' || (SELECT COUNT(*) FROM dim_city);
-\echo '📊 Загружено категорий товаров: ' || (SELECT COUNT(*) FROM dim_product_category);
-\echo '📊 Загружено категорий питомцев: ' || (SELECT COUNT(*) FROM dim_pet_category);
-\echo '✅ Общие измерения загружены'
+\echo 'Загружено стран: ' || (SELECT COUNT(*) FROM dim_country);
+\echo 'Загружено городов: ' || (SELECT COUNT(*) FROM dim_city);
+\echo 'Загружено категорий товаров: ' || (SELECT COUNT(*) FROM dim_product_category);
+\echo 'Загружено категорий питомцев: ' || (SELECT COUNT(*) FROM dim_pet_category);
+\echo 'Общие измерения загружены'

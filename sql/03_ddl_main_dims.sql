@@ -1,7 +1,7 @@
 -- 03_ddl_main_dims.sql
 -- Основные измерения с нормализацией
 
-\echo '🚀 Этап 3: Создание основных измерений...'
+\echo 'Этап 3: Создание основных измерений...'
 
 -- Покупатели
 DROP TABLE IF EXISTS bridge_customer_pet CASCADE;
@@ -98,4 +98,4 @@ CREATE TABLE dim_supplier (
 );
 CREATE INDEX idx_dim_supplier_city ON dim_supplier(city_id);
 
-\echo '✅ Основные измерения созданы (customer, pet, seller, product, store, supplier)'
+\echo 'Основные измерения созданы (customer, pet, seller, product, store, supplier)'

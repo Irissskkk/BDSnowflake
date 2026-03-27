@@ -1,7 +1,7 @@
 -- 07_dml_load_fact.sql
 -- Загрузка таблицы фактов продаж
 
-\echo '🚀 Этап 7: Загрузка таблицы фактов...'
+\echo 'Этап 7: Загрузка таблицы фактов...'
 
 INSERT INTO fact_sales (
     sale_date,
@@ -33,9 +33,9 @@ WHERE sr.sale_date IS NOT NULL
   AND sr.sale_quantity > 0;
 
 -- Статистика фактов
-\echo '📊 Загружено продаж: ' || (SELECT COUNT(*) FROM fact_sales);
-\echo '📅 Диапазон дат: ' || 
+\echo 'Загружено продаж: ' || (SELECT COUNT(*) FROM fact_sales);
+\echo 'Диапазон дат: ' || 
     (SELECT MIN(sale_date)::TEXT || ' — ' || MAX(sale_date)::TEXT FROM fact_sales);
-\echo '💰 Общая выручка: ' || 
+\echo 'Общая выручка: ' || 
     (SELECT SUM(total_price)::TEXT || ' у.е.' FROM fact_sales);
-\echo '✅ Таблица фактов загружена'
+\echo 'Таблица фактов загружена'

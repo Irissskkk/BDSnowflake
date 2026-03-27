@@ -3,12 +3,12 @@
 
 \echo ''
 \echo '=========================================='
-\echo '🔍 ПРОВЕРКА ЦЕЛОСТНОСТИ ДАННЫХ'
+\echo 'ПРОВЕРКА ЦЕЛОСТНОСТИ ДАННЫХ'
 \echo '=========================================='
 
 -- 1. Счётчики по всем таблицам
 \echo ''
-\echo '📊 Количество записей в таблицах:'
+\echo 'Количество записей в таблицах:'
 SELECT 'staging_raw' AS table_name, COUNT(*) AS row_count FROM staging_raw
 UNION ALL SELECT 'fact_sales', COUNT(*) FROM fact_sales
 UNION ALL SELECT 'dim_customer', COUNT(*) FROM dim_customer
@@ -21,7 +21,7 @@ ORDER BY row_count DESC;
 
 -- 2. Проверка внешних ключей (не должно быть сирот)
 \echo ''
-\echo '❌ Записи с нарушенными связями (должно быть 0):'
+\echo ' Записи с нарушенными связями (должно быть 0):'
 SELECT 'fact_sales → customer' AS check_name, COUNT(*) AS orphan_count
 FROM fact_sales WHERE customer_id IS NULL
 UNION ALL
@@ -37,7 +37,7 @@ SELECT 'dim_product → category', COUNT(*) FROM dim_product WHERE category_id I
 
 -- 3. Проверка дубликатов в измерениях
 \echo ''
-\echo '🔄 Дубликаты в измерениях (должно быть 0):'
+\echo 'Дубликаты в измерениях (должно быть 0):'
 SELECT 'dim_customer.email' AS field, COUNT(*) - COUNT(DISTINCT email) AS duplicates 
 FROM dim_customer WHERE email IS NOT NULL
 UNION ALL
@@ -47,12 +47,12 @@ SELECT 'dim_product.source_id', COUNT(*) - COUNT(DISTINCT source_id) FROM dim_pr
 
 \echo ''
 \echo '=========================================='
-\echo '📈 ПРИМЕРЫ АНАЛИТИЧЕСКИХ ЗАПРОСОВ'
+\echo ' ПРИМЕРЫ АНАЛИТИЧЕСКИХ ЗАПРОСОВ'
 \echo '=========================================='
 
 -- 4. Выручка по категориям товаров (Snowflake: fact → product → category)
 \echo ''
-\echo '💰 Топ-5 категорий по выручке:'
+\echo 'Топ-5 категорий по выручке:'
 SELECT 
     pc.category_name,
     COUNT(f.sale_id) AS transactions,
@@ -67,7 +67,7 @@ LIMIT 5;
 
 -- 5. Продажи по странам (нормализация через dim_country)
 \echo ''
-\echo '🌍 Выручка по странам покупателей:'
+\echo 'Выручка по странам покупателей:'
 SELECT 
     c.country_name,
     COUNT(DISTINCT f.sale_id) AS orders,
@@ -81,7 +81,7 @@ LIMIT 5;
 
 -- 6. Snowflake-проверка: товар → категория → питомец
 \echo ''
-\echo '🐾 Пример связи "снежинка" (товар → категории):'
+\echo 'Пример связи "снежинка" (товар → категории):'
 SELECT 
     p.product_name,
     pc.category_name AS product_category,
@@ -93,7 +93,7 @@ LIMIT 10;
 
 -- 7. Аналитика по времени
 \echo ''
-\echo '📅 Динамика продаж по месяцам:'
+\echo 'Динамика продаж по месяцам:'
 SELECT 
     TO_CHAR(sale_date, 'YYYY-MM') AS month,
     COUNT(*) AS orders,
@@ -104,7 +104,7 @@ ORDER BY month;
 
 -- 8. Топ товаров по продажам
 \echo ''
-\echo '🛍️ Топ-10 товаров по выручке:'
+\echo 'Топ-10 товаров по выручке:'
 SELECT 
     p.product_name,
     p.brand,
@@ -118,7 +118,7 @@ LIMIT 10;
 
 -- 9. Проверка нормализации стран (снежинка)
 \echo ''
-\echo '🔗 Проверка нормализации (снежинка):'
+\echo 'Проверка нормализации (снежинка):'
 SELECT 
     'customers' AS entity,
     COUNT(DISTINCT cu.country_id) AS unique_countries
@@ -136,5 +136,5 @@ JOIN dim_city ct ON su.city_id = ct.city_id;
 
 \echo ''
 \echo '=========================================='
-\echo '✅ Проверка завершена успешно!'
+\echo 'Проверка завершена успешно!'
 \echo '=========================================='

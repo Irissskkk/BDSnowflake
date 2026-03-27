@@ -1,7 +1,7 @@
 -- 02_ddl_shared_dims.sql
 -- Общие нормализованные справочники (ядро "снежинки")
 
-\echo '🚀 Этап 2: Создание общих измерений...'
+\echo 'Этап 2: Создание общих измерений...'
 
 -- Страны
 DROP TABLE IF EXISTS dim_country CASCADE;
@@ -36,4 +36,4 @@ CREATE TABLE dim_pet_category (
     category_name VARCHAR(100) UNIQUE NOT NULL
 );
 
-\echo '✅ Общие измерения созданы (dim_country, dim_city, dim_product_category, dim_pet_category)'
+\echo 'Общие измерения созданы (dim_country, dim_city, dim_product_category, dim_pet_category)'
