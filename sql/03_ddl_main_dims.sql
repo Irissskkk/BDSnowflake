@@ -1,7 +1,4 @@
 -- 03_ddl_main_dims.sql
--- Основные измерения с нормализацией
-
-\echo 'Этап 3: Создание основных измерений...'
 
 -- Покупатели
 DROP TABLE IF EXISTS bridge_customer_pet CASCADE;
@@ -30,7 +27,7 @@ CREATE TABLE dim_pet (
 );
 CREATE INDEX idx_dim_pet_category ON dim_pet(pet_category_id);
 
--- Связь клиент-питомец (многие-ко-многим)
+-- Связь клиент-питомец многие ко многим
 CREATE TABLE bridge_customer_pet (
     customer_id INT REFERENCES dim_customer(customer_id) ON DELETE CASCADE,
     pet_id INT REFERENCES dim_pet(pet_id) ON DELETE CASCADE,
@@ -97,5 +94,3 @@ CREATE TABLE dim_supplier (
     city_id INT REFERENCES dim_city(city_id)
 );
 CREATE INDEX idx_dim_supplier_city ON dim_supplier(city_id);
-
-\echo 'Основные измерения созданы (customer, pet, seller, product, store, supplier)'
