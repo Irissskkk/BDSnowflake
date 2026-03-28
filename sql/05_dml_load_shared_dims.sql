@@ -1,9 +1,6 @@
 -- 05_dml_load_shared_dims.sql
 -- Загрузка общих нормализованных справочников
 
-\echo 'Этап 5: Загрузка общих измерений...'
-
--- Страны: собираем из всех сущностей
 INSERT INTO dim_country (country_name)
 SELECT DISTINCT UPPER(TRIM(country_val)) AS country_name
 FROM (
@@ -17,7 +14,6 @@ FROM (
 ) AS countries
 ON CONFLICT (country_name) DO NOTHING;
 
--- Города с привязкой к стране
 INSERT INTO dim_city (city_name, state, country_id)
 SELECT DISTINCT
     UPPER(TRIM(sr.store_city)) AS city_name,
@@ -36,7 +32,7 @@ FROM staging_raw
 WHERE product_category IS NOT NULL AND TRIM(product_category) != ''
 ON CONFLICT (category_name) DO NOTHING;
 
--- Категории питомцев (из двух полей)
+-- Категории питомцев 
 INSERT INTO dim_pet_category (category_name)
 SELECT DISTINCT UPPER(TRIM(cat_val))
 FROM (
@@ -46,9 +42,7 @@ FROM (
 ) AS pets
 ON CONFLICT (category_name) DO NOTHING;
 
--- Статистика
 \echo 'Загружено стран: ' || (SELECT COUNT(*) FROM dim_country);
 \echo 'Загружено городов: ' || (SELECT COUNT(*) FROM dim_city);
 \echo 'Загружено категорий товаров: ' || (SELECT COUNT(*) FROM dim_product_category);
 \echo 'Загружено категорий питомцев: ' || (SELECT COUNT(*) FROM dim_pet_category);
-\echo 'Общие измерения загружены'
