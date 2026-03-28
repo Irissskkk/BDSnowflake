@@ -1,12 +1,10 @@
 -- 01_create_staging.sql
--- Создание staging-таблицы + импорт всех 10 CSV-файлов БЕЗ объединения
+-- Создание staging-таблицы + импорт всех 10 CSV-файлов 
 
 \echo 'Этап 1: Создание staging_raw и импорт данных...'
 
--- Удаляем таблицу если существует (для идемпотентности)
 DROP TABLE IF EXISTS staging_raw CASCADE;
 
--- Создаём сырую таблицу с полной схемой (40+ колонок)
 CREATE TABLE staging_raw (
     id INT,
     customer_first_name VARCHAR(100),
@@ -70,15 +68,6 @@ CREATE INDEX idx_staging_supplier_name ON staging_raw(supplier_name);
 
 \echo 'Таблица staging_raw создана'
 
--- =====================================================
--- ИМПОРТ ВСЕХ 10 CSV-ФАЙЛОВ (без объединения!)
--- =====================================================
--- Пути указаны для docker-тома: /data_source/...
--- Файлы смонтированы через volumes в docker-compose.yml
-
-\echo ' Начинаю импорт CSV-файлов...'
-
--- Файл 0: MOCK_DATA.csv
 \echo '   → MOCK_DATA.csv'
 COPY staging_raw FROM '/data_source/MOCK_DATA.csv' 
 WITH (
@@ -93,7 +82,6 @@ WITH (
     )
 );
 
--- Файл 1: MOCK_DATA (1).csv
 \echo '   → MOCK_DATA (1).csv'
 COPY staging_raw FROM '/data_source/MOCK_DATA (1).csv' 
 WITH (
@@ -108,7 +96,6 @@ WITH (
     )
 );
 
--- Файл 2: MOCK_DATA (2).csv
 \echo '   → MOCK_DATA (2).csv'
 COPY staging_raw FROM '/data_source/MOCK_DATA (2).csv' 
 WITH (
@@ -123,7 +110,6 @@ WITH (
     )
 );
 
--- Файл 3: MOCK_DATA (3).csv
 \echo '   → MOCK_DATA (3).csv'
 COPY staging_raw FROM '/data_source/MOCK_DATA (3).csv' 
 WITH (
@@ -138,7 +124,6 @@ WITH (
     )
 );
 
--- Файл 4: MOCK_DATA (4).csv
 \echo '   → MOCK_DATA (4).csv'
 COPY staging_raw FROM '/data_source/MOCK_DATA (4).csv' 
 WITH (
@@ -153,7 +138,6 @@ WITH (
     )
 );
 
--- Файл 5: MOCK_DATA (5).csv
 \echo '   → MOCK_DATA (5).csv'
 COPY staging_raw FROM '/data_source/MOCK_DATA (5).csv' 
 WITH (
@@ -168,7 +152,6 @@ WITH (
     )
 );
 
--- Файл 6: MOCK_DATA (6).csv
 \echo '   → MOCK_DATA (6).csv'
 COPY staging_raw FROM '/data_source/MOCK_DATA (6).csv' 
 WITH (
@@ -183,7 +166,6 @@ WITH (
     )
 );
 
--- Файл 7: MOCK_DATA (7).csv
 \echo '   → MOCK_DATA (7).csv'
 COPY staging_raw FROM '/data_source/MOCK_DATA (7).csv' 
 WITH (
@@ -198,7 +180,6 @@ WITH (
     )
 );
 
--- Файл 8: MOCK_DATA (8).csv
 \echo '   → MOCK_DATA (8).csv'
 COPY staging_raw FROM '/data_source/MOCK_DATA (8).csv' 
 WITH (
@@ -213,7 +194,6 @@ WITH (
     )
 );
 
--- Файл 9: MOCK_DATA (9).csv
 \echo '   → MOCK_DATA (9).csv'
 COPY staging_raw FROM '/data_source/MOCK_DATA (9).csv' 
 WITH (
@@ -229,25 +209,17 @@ WITH (
 );
 
 \echo ' Все 10 файлов импортированы'
--- =====================================================
---  ПРОВЕРКА ИМПОРТА (ИСПРАВЛЕНО)
--- =====================================================
 \echo ''
 \echo ' Статистика после импорта:'
 
--- Общее количество строк
 SELECT ' Всего строк в staging_raw' AS metric, COUNT(*)::TEXT AS value FROM staging_raw
 UNION ALL
--- Уникальные покупатели
 SELECT ' Уникальные покупатели', COUNT(DISTINCT sale_customer_id)::TEXT FROM staging_raw
 UNION ALL
--- Уникальные товары
 SELECT ' Уникальные товары', COUNT(DISTINCT sale_product_id)::TEXT FROM staging_raw
 UNION ALL
--- Уникальные магазины
 SELECT ' Уникальные магазины', COUNT(DISTINCT store_name)::TEXT FROM staging_raw
 UNION ALL
--- Диапазон дат
 SELECT ' Диапазон дат', MIN(sale_date)::TEXT || ' — ' || MAX(sale_date)::TEXT FROM staging_raw;
 
 -- Проверка на дубликаты по первичному ключу id
@@ -269,5 +241,3 @@ SELECT
     COUNT(*) FILTER (WHERE customer_email IS NULL) AS null_customers
 FROM staging_raw;
 
-\echo ''
-\echo ' Этап 1 завершён. Переходите к 02_ddl_shared_dims.sql'
