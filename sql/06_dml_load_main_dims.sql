@@ -1,8 +1,6 @@
 -- 06_dml_load_main_dims.sql
 -- Загрузка основных измерений
 
-\echo 'Этап 6: Загрузка основных измерений...'
-
 -- ========== ПОКУПАТЕЛИ ==========
 INSERT INTO dim_customer (source_id, first_name, last_name, age, email, postal_code, country_id)
 SELECT DISTINCT
@@ -127,4 +125,3 @@ ON CONFLICT (source_name) DO NOTHING;
 \echo 'Магазинов: ' || (SELECT COUNT(*) FROM dim_store);
 \echo 'Поставщиков: ' || (SELECT COUNT(*) FROM dim_supplier);
 \echo 'Питомцев: ' || (SELECT COUNT(*) FROM dim_pet);
-\echo 'Основные измерения загружены'
