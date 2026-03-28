@@ -6,7 +6,7 @@
 \echo 'ПРОВЕРКА ЦЕЛОСТНОСТИ ДАННЫХ'
 \echo '=========================================='
 
--- 1. Счётчики по всем таблицам
+-- Счётчики по всем таблицам
 \echo ''
 \echo 'Количество записей в таблицах:'
 SELECT 'staging_raw' AS table_name, COUNT(*) AS row_count FROM staging_raw
@@ -19,7 +19,7 @@ UNION ALL SELECT 'dim_seller', COUNT(*) FROM dim_seller
 UNION ALL SELECT 'dim_country', COUNT(*) FROM dim_country
 ORDER BY row_count DESC;
 
--- 2. Проверка внешних ключей (не должно быть сирот)
+-- Проверка внешних ключей 
 \echo ''
 \echo ' Записи с нарушенными связями (должно быть 0):'
 SELECT 'fact_sales → customer' AS check_name, COUNT(*) AS orphan_count
@@ -35,7 +35,7 @@ SELECT 'fact_sales → supplier', COUNT(*) FROM fact_sales WHERE supplier_id IS 
 UNION ALL
 SELECT 'dim_product → category', COUNT(*) FROM dim_product WHERE category_id IS NULL;
 
--- 3. Проверка дубликатов в измерениях
+--  Проверка дубликатов в измерениях
 \echo ''
 \echo 'Дубликаты в измерениях (должно быть 0):'
 SELECT 'dim_customer.email' AS field, COUNT(*) - COUNT(DISTINCT email) AS duplicates 
@@ -50,7 +50,7 @@ SELECT 'dim_product.source_id', COUNT(*) - COUNT(DISTINCT source_id) FROM dim_pr
 \echo ' ПРИМЕРЫ АНАЛИТИЧЕСКИХ ЗАПРОСОВ'
 \echo '=========================================='
 
--- 4. Выручка по категориям товаров (Snowflake: fact → product → category)
+-- Выручка по категориям товаров (Snowflake: fact, product, category)
 \echo ''
 \echo 'Топ-5 категорий по выручке:'
 SELECT 
@@ -65,7 +65,7 @@ GROUP BY pc.category_name
 ORDER BY revenue DESC
 LIMIT 5;
 
--- 5. Продажи по странам (нормализация через dim_country)
+-- Продажи по странам
 \echo ''
 \echo 'Выручка по странам покупателей:'
 SELECT 
@@ -79,7 +79,7 @@ GROUP BY c.country_name
 ORDER BY revenue DESC
 LIMIT 5;
 
--- 6. Snowflake-проверка: товар → категория → питомец
+-- Snowflake-проверка: товар, категория, питомец
 \echo ''
 \echo 'Пример связи "снежинка" (товар → категории):'
 SELECT 
@@ -91,7 +91,7 @@ JOIN dim_product_category pc ON p.category_id = pc.category_id
 LEFT JOIN dim_pet_category petcat ON p.pet_category_id = petcat.pet_category_id
 LIMIT 10;
 
--- 7. Аналитика по времени
+-- Аналитика по времени
 \echo ''
 \echo 'Динамика продаж по месяцам:'
 SELECT 
@@ -102,7 +102,7 @@ FROM fact_sales
 GROUP BY TO_CHAR(sale_date, 'YYYY-MM')
 ORDER BY month;
 
--- 8. Топ товаров по продажам
+-- Топ товаров по продажам
 \echo ''
 \echo 'Топ-10 товаров по выручке:'
 SELECT 
@@ -116,7 +116,7 @@ GROUP BY p.product_id, p.product_name, p.brand
 ORDER BY revenue DESC
 LIMIT 10;
 
--- 9. Проверка нормализации стран (снежинка)
+-- Проверка нормализации стран 
 \echo ''
 \echo 'Проверка нормализации (снежинка):'
 SELECT 
