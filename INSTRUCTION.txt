@@ -1,0 +1,26 @@
+Запуск первой лабораторной работы
+
+1. Запустить БД
+   cd docker && docker-compose up -d
+
+2. Создать таблицу и импортировать данные 
+   \i sql/01_create_raw_table.sql
+   \copy mock_data FROM 'data/mock_data(1).csv' CSV HEADER
+   \copy mock_data FROM 'data/mock_data(2).csv' CSV HEADER
+   \copy mock_data FROM 'data/mock_data(3).csv' CSV HEADER
+   \copy mock_data FROM 'data/mock_data(4).csv' CSV HEADER
+   \copy mock_data FROM 'data/mock_data(5).csv' CSV HEADER
+   \copy mock_data FROM 'data/mock_data(6).csv' CSV HEADER
+   \copy mock_data FROM 'data/mock_data(7).csv' CSV HEADER
+   \copy mock_data FROM 'data/mock_data(8).csv' CSV HEADER
+   \copy mock_data FROM 'data/mock_data(9).csv' CSV HEADER
+   \copy mock_data FROM 'data/mock_data(10).csv' CSV HEADER
+
+3. Построить модель снежинка
+   \i sql/03_create_fact_tables.sql
+   \i sql/04_create_dimension_tables.sql  
+   \i sql/05_create_foreign_keys.sql
+   \i sql/06_populate_tables.sql
+
+4. Проверить
+   \i sql/08_verification.sql
